@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <camelContext id="context-cd4e83ec-117e-4f6d-a088-b9296ecbee3c" xmlns="http://camel.apache.org/schema/spring">
+
+        <onException>
+            <exception>java.lang.Exception</exception>
+            <handled><constant>true</constant></handled>
+            <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
+                <constant>500</constant>
+            </setHeader>
+            <setBody>
+                <simple>${exception.message}</simple>
+            </setBody>
+        </onException>
+
+        <rest id="rest-for-openapi-document" path="/" enableCORS="true">
+            <get id="openapi.json" produces="application/json" uri="openapi.json">
+                <description>Gets the OpenAPI document for this service</description>
+                <route id="route-for-openapi-document">
+                    <setHeader id="setHeader-for-openapi-document" headerName="Exchange.CONTENT_TYPE">
+                        <constant>application/vnd.oai.openapi+json</constant>
+                    </setHeader>
+                    <setBody id="setBody-for-openapi-document">
+                        <constant>resource:classpath:openapi.json</constant>
+                    </setBody>
+                </route>
+            </get>
+        </rest>
+
+        <rest bindingMode="json" enableCORS="true" id="rest-775d1863-0380-444c-af5e-3f863fc1e35e">
+            <get id="getcustomers" uri="/customers">
+                <description>Gets a list of all `Customer` entities.</description>
+                <to uri="direct:getcustomers"/>
+            </get>
+            <post id="createCustomer" uri="/customers">
+                <description>Creates a new instance of a `Customer`.</description>
+                <to uri="direct:createCustomer"/>
+            </post>
+            <get id="getCustomer" uri="/customers/{customerId}">
+                <description>Gets the details of a single instance of a `Customer`.</description>
+                <to uri="direct:getCustomer"/>
+            </get>
+            <put id="updateCustomer" uri="/customers/{customerId}">
+                <description>Updates an existing `Customer`.</description>
+                <to uri="direct:updateCustomer"/>
+            </put>
+            <delete id="deleteCustomer" uri="/customers/{customerId}">
+                <description>Deletes an existing `Customer`.</description>
+                <to uri="direct:deleteCustomer"/>
+            </delete>
+        </rest>
+
+        <route id="route-4f89d2f8-9527-4a38-8a14-b344aedfe995">
+            <from id="from-ed3b15b7-1e39-4d07-a2ae-5c1be3575699" uri="direct:getcustomers"/>
+            <to id="to-24331864-aca0-49d7-b8ca-6a2124d4b847" uri="direct:501"/>
+        </route>
+        <route id="route-9761c5a2-eeaa-4ec5-8bfd-36d4245b2dc2">
+            <from id="from-9c8b55a3-3ba5-4536-b3aa-f2241081f6d8" uri="direct:createCustomer"/>
+            <to id="to-bd7278e2-c69c-4297-8756-37859f69a565" uri="direct:501"/>
+        </route>
+        <route id="route-e2109908-ca58-4597-95e7-a1ed9b3584bf">
+            <from id="from-81e94e6c-d26b-4254-bc7b-0828816eddda" uri="direct:getCustomer"/>
+            <to id="to-24ada797-56f7-43cd-a11d-0fb84edf2719" uri="direct:501"/>
+        </route>
+        <route id="route-e47b43c2-4d5f-4899-978f-6be37a5d932f">
+            <from id="from-2359ce15-e471-46a4-a1ae-d838211d86c0" uri="direct:updateCustomer"/>
+            <to id="to-cd25a73a-2fa8-495a-92df-f71dad8ef9f8" uri="direct:501"/>
+        </route>
+        <route id="route-8ae36753-b7b0-4d0f-a7c2-6844aa093e6b">
+            <from id="from-da4a2685-566a-4469-b800-1738c54a1537" uri="direct:deleteCustomer"/>
+            <to id="to-b1b1c197-0ff7-4ac1-b613-4f30fdbfcfee" uri="direct:501"/>
+        </route>
+
+        <route id="route-for-unimplemented-operations">
+            <from id="from-for-unimplemented-operations-route" uri="direct:501"/>
+            <log id="log-for-unimplemented-operations-route" message="API operation not yet implemented: ${headers.CamelHttpMethod} ${headers.CamelHttpPath}"/>
+            <setHeader id="setHeader-for-unimplemented-operations-route" headerName="Exchange.HTTP_RESPONSE_CODE">
+                <constant>501</constant>
+            </setHeader>
+            <setBody id="setBody-for-unimplemented-operations-route">
+                <simple>API operation not implemented: ${headers.CamelHttpMethod} ${headers.CamelHttpPath}</simple>
+            </setBody>
+        </route>
+
+    </camelContext>
+</beans>

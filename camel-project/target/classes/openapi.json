@@ -1,0 +1,76 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "A brand new API with no content.  Go nuts!",
+    "version" : "1.0.0",
+    "title" : "New API"
+  },
+  "paths" : {
+    "/helloword" : { },
+    "/customers" : {
+      "get" : {
+        "summary" : "List All customers",
+        "description" : "Gets a list of all `Customer` entities.",
+        "operationId" : "getcustomers",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful response - returns an array of `Customer` entities."
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create a Customer",
+        "description" : "Creates a new instance of a `Customer`.",
+        "operationId" : "createCustomer",
+        "parameters" : [ ],
+        "responses" : {
+          "201" : {
+            "description" : "Successful response."
+          }
+        }
+      }
+    },
+    "/customers/{customerId}" : {
+      "get" : {
+        "summary" : "Get a Customer",
+        "description" : "Gets the details of a single instance of a `Customer`.",
+        "operationId" : "getCustomer",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful response - returns a single `Customer`."
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update a Customer",
+        "description" : "Updates an existing `Customer`.",
+        "operationId" : "updateCustomer",
+        "parameters" : [ ],
+        "responses" : {
+          "202" : {
+            "description" : "Successful response."
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete a Customer",
+        "description" : "Deletes an existing `Customer`.",
+        "operationId" : "deleteCustomer",
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Successful response."
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "customerId",
+        "in" : "path",
+        "description" : "A unique identifier for a `Customer`.",
+        "required" : true
+      } ]
+    }
+  }
+}
