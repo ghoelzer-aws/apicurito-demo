@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: main
+    prometheus.io/path: /metrics
+    jkube.io/git-branch: main
+    prometheus.io/port: "9779"
+    prometheus.io/scrape: "true"
+    jkube.io/git-url: https://github.com/ghoelzer-rht/apicurito-demo.git
+    app.openshift.io/vcs-uri: https://github.com/ghoelzer-rht/apicurito-demo.git
+    jkube.io/git-commit: 75392869630c5bcf8b8226c317e1d732e1a5cd94
+  labels:
+    expose: "true"
+    app: new-api
+    provider: jkube
+    version: 1.0-SNAPSHOT
+    group: io.example
+  name: new-api
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: new-api
+    provider: jkube
+    group: io.example
